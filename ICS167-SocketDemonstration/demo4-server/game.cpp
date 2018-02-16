@@ -1,6 +1,6 @@
 #define _USE_MATH_DEFINES
 
-#define MAX_PLAYERS 1
+#define MAX_PLAYERS 4
 #define X_BOUNDS 550
 #define Y_BOUNDS 550
 #define BALL_RADIUS 10
@@ -50,8 +50,10 @@ void game::updateBall() {
 		this->lastBallPos.y = ballPos.y;
 		this->ballPos.x += cos(this->ballDirection * M_PI / 180);
 		this->ballPos.y += sin(this->ballDirection * M_PI / 180);
-		if (this->ballPos.y + BALL_RADIUS > Y_BOUNDS || this->ballPos.y - BALL_RADIUS < 0) {
-			flipBallVertical();
+		if (this->ballPos.y + BALL_RADIUS > Y_BOUNDS || this->ballPos.y - BALL_RADIUS < 0 ||
+			this->ballPos.x + BALL_RADIUS > X_BOUNDS || this->ballPos.x - BALL_RADIUS < 0) {
+			resetBall();
+			changeScore(this->lastPlayerHit, 1);
 		}
 		if (this->ballPos.x + BALL_RADIUS > X_BOUNDS) {
 			flipBallHorizontal();
@@ -68,10 +70,15 @@ void game::updateBall() {
 	}
 }
 
+void game::resetBall() {
+	this->ballPos.x = X_BOUNDS / 2;
+	this->ballPos.y = Y_BOUNDS / 2;
+}
+
 void game::changeScore(int index, int toAdd) {
 	this->players[index].score += toAdd;
 	if (this->players[index].score >= this->maxScore) {
-		this->stopGame();
+		stopGame();
 	}
 }
 
@@ -83,8 +90,7 @@ void game::stopGame() {
 	for (map<int,player>::iterator it = this->players.begin(); it != this->players.end(); ++it) {
 		it->second.score = 0;
 	}
-	ballPos.x = 250;
-	ballPos.y = 250;
+	resetBall();
 	this->running = false;
 }
 
