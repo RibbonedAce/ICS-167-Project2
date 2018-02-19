@@ -824,7 +824,7 @@ string webSocket::getGameStats() {
 	string result = to_string(pongGame->ballPos.x) + "," + to_string(pongGame->ballPos.y);
 	for (int i = 0; i < pongGame->players.size(); ++i) {
 		if (pongGame->players[i] != nullptr) {
-			result += ";" + to_string(i) + "," + to_string(pongGame->players[i]->position) + "," + to_string(pongGame->players[i]->score);
+			result += ";" + to_string(i) + "," + pongGame->players[i]->name + "," + to_string(pongGame->players[i]->position) + "," + to_string(pongGame->players[i]->score);
 		}
 	}
 	return result;
